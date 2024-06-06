@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "recoil": "^0.7.7",
     "firebase": "^10.12.2",
     "next": "14.2.3",
     "next-auth": "^4.24.7",
