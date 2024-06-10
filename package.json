@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "react-modal": "^3.16.1",
     "recoil": "^0.7.7",
     "firebase": "^10.12.2",
     "next": "14.2.3",
