@@ -1,26 +1,40 @@
 'use client';
 
-import { HiDotsHorizontal } from 'react-icons/hi';
+import {
+  collection,
+  getFirestore,
+  onSnapshot,
+  orderBy,
+  query,
+} from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { app } from '../firebase';
+import Comment from './Comment';
 
-export default function Comment({ comment, id }) {
+export default function Comments({ id }) {
+  const db = getFirestore(app);
+  const [comments, setComments] = useState([]); // [1
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(db, 'posts', id, 'comments'),
+        orderBy('timestamp', 'desc')
+      ),
+      (snapshot) => {
+        setComments(snapshot.docs);
+      }
+    );
+  }, [db, id]);
   return (
-    <div className='flex p-3 border-b border-gray-200 hover:bg-gray-50 pl-10'>
-      <img
-        src={comment?.userImg}
-        alt='user-img'
-        className='h-9 w-9 rounded-full mr-4'
-      />
-      <div className='flex-1'>
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center space-x-1 whitespace-nowrap'>
-            <h4 className='font-bold text-sm truncate'>{comment?.name}</h4>
-            <span className='text-xs truncate'>@{comment?.username}</span>
-          </div>
-          <HiDotsHorizontal className='text-sm' />
-        </div>
-
-        <p className='text-gray-800 text-xs my-3'>{comment?.comment}</p>
-      </div>
+    <div>
+      {comments.map((comment) => (
+        <Comment
+          key={comment.id}
+          comment={comment.data()}
+          commentId={comment.id}
+          originalPostId={id}
+        />
+      ))}
     </div>
   );
 }
